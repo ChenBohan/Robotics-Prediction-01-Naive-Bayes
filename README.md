@@ -19,6 +19,8 @@ Model-Based: multimodal estimation algorithm
 
 Multiple model algorithms are responsible for maintaining beliefs for the probability of each maneuver.
 
+[A comparative study of multiple-model algorithms for maneuvering target tracking](http://xueshu.baidu.com/s?wd=paperuri%3A%28635878b3d358a4e3afac7f9a61e8835b%29&filter=sc_long_sign&tn=SE_xueshusource_2kduw22v&sc_vurl=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.61.9763%26rep%3Drep1%26type%3Dpdf&ie=utf-8&sc_us=3450841413258429113)
+
 ## 2.Data-Driven
 
 Data-Driven: meachine learning
