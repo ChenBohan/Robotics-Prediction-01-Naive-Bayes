@@ -1,4 +1,4 @@
-# Robotics-Prediction-Intro-to-Prediction
+# Robotics-Prediction-Naive Bayes
 Udacity Self-Driving Car Engineer Nanodegree: Prediction.
 
 <img src="https://github.com/ChenBohan/Robotics-Prediction-Intro-to-Prediction/blob/master/readme_img/MBvsDD.png" width = "70%" height = "70%" div align=center />
