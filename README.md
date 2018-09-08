@@ -45,3 +45,25 @@ Data-Driven: meachine learning
 
 3. Generate Predictions - For each cluster we identify the most likely prototype trajectory. We broadcast each of these trajectories along with the associated probability (see the image below).
 
+## 3.Hybrid Approaches: Naive Bayes
+
+1. Implement the ``train(self, data, labels)`` method in the class GNB in ``classifier.cpp``. 
+
+Training a Gaussian Naive Bayes classifier consists of computing and storing the mean and standard deviation from the data for each label/feature pair. 
+
+
+2. Implement the ``predict(self, observation)`` method in ``classifier.cpp``.
+
+Given a new data point, prediction requires two steps: 
+
+2.1. Compute the conditional probabilities for each feature/label combination.
+
+For a feature xxx and label CCC with mean μ\muμ and standard deviation σ\sigmaσ (computed in training), the conditional probability can be computed using the formula:
+
+2.2. Use the conditional probabilities in a Naive Bayes classifier. 
+
+This can be done using the formula:
+
+2.3. When you want to test your classifier, run ``Test Run`` and check out the results.
+
+
