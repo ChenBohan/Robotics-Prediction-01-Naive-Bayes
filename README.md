@@ -110,6 +110,35 @@ For a feature xxx and label CCC with mean μ\muμ and standard deviation σ\sigm
 
 This can be done using the formula:
 
-2.3. When you want to test your classifier, run ``Test Run`` and check out the results.
+```python
+string GNB::predict(vector<double> sample)
+{
+	//Calculate product of conditional probabilities for each label.
+	double left_p = 1.0;
+	double keep_p = 1.0;
+	double right_p = 1.0; 
+	for (int i=0; i<4; i++){
+	    left_p *= (1.0/sqrt(2.0 * M_PI * pow(left_sds[i], 2))) * exp(-0.5*pow(sample[i] - left_means[i], 2)/pow(left_sds[i], 2));
+	    keep_p *= (1.0/sqrt(2.0 * M_PI * pow(keep_sds[i], 2))) * exp(-0.5*pow(sample[i] - keep_means[i], 2)/pow(keep_sds[i], 2));
+	    right_p *= (1.0/sqrt(2.0 * M_PI * pow(right_sds[i], 2))) * exp(-0.5*pow(sample[i] - right_means[i], 2)/pow(right_sds[i], 2));
+	}
+	
+	//Multiply each by the prior
+	left_p *= left_prior;
+	keep_p *= keep_prior;
+	right_p *= right_prior;
+    
+    	double probs[3] = {left_p, keep_p, right_p};
+    	double max = left_p;
+    	double max_index = 0;
+    	for (int i=1; i<3; i++){
+        	if (probs[i] > max) {
+            		max = probs[i];
+            		max_index = i;
+        }
+    }	
+	return this -> possible_labels[max_index];
+}
+```
 
 
