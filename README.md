@@ -104,11 +104,16 @@ Given a new data point, prediction requires two steps:
 
 2.1. Compute the conditional probabilities for each feature/label combination.
 
-For a feature xxx and label CCC with mean μ\muμ and standard deviation σ\sigmaσ (computed in training), the conditional probability can be computed using the formula:
+For a feature xxx and label CCC with mean μ\muμ and standard deviation σ\sigmaσ (computed in training), the conditional probability can be computed using the formula:.
+
+<img src="https://github.com/ChenBohan/Robotics-Path-Planning-02-Prediction-Naive-Bayes/blob/master/readme_img/formula1.png" width = "40%" height = "40%" div align=center />
 
 2.2. Use the conditional probabilities in a Naive Bayes classifier. 
 
 This can be done using the formula:
+
+
+<img src="https://github.com/ChenBohan/Robotics-Path-Planning-02-Prediction-Naive-Bayes/blob/master/readme_img/formula2.png" width = "50%" height = "50%" div align=center />
 
 ```python
 string GNB::predict(vector<double> sample)
