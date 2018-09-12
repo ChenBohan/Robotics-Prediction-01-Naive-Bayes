@@ -1,4 +1,4 @@
-# Robotics-Prediction-Naive Bayes
+# Robotics-Path-Planning-Prediction-Naive-Bayes
 Udacity Self-Driving Car Engineer Nanodegree: Prediction.
 
 <img src="https://github.com/ChenBohan/Robotics-Prediction-Intro-to-Prediction/blob/master/readme_img/MBvsDD.png" width = "70%" height = "70%" div align=center />
@@ -18,6 +18,10 @@ Model-Based: multimodal estimation algorithm
 ### Autonomous Multiple Model
 
 Multiple model algorithms are responsible for maintaining beliefs for the probability of each maneuver.
+
+<img src="https://github.com/ChenBohan/Robotics-Prediction-Naive-Bayes/blob/master/readme_img/variables%20in%20AMM.png" width = "70%" height = "70%" div align=center />
+
+<img src="https://github.com/ChenBohan/Robotics-Prediction-Naive-Bayes/blob/master/readme_img/multimodal%20estimate.png" width = "70%" height = "70%" div align=center />
 
 [A comparative study of multiple-model algorithms for maneuvering target tracking](http://xueshu.baidu.com/s?wd=paperuri%3A%28635878b3d358a4e3afac7f9a61e8835b%29&filter=sc_long_sign&tn=SE_xueshusource_2kduw22v&sc_vurl=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.61.9763%26rep%3Drep1%26type%3Dpdf&ie=utf-8&sc_us=3450841413258429113)
 
@@ -47,12 +51,54 @@ Data-Driven: meachine learning
 
 ## 3.Hybrid Approaches: Naive Bayes
 
-1. Implement the ``train(self, data, labels)`` method in the class GNB in ``classifier.cpp``. 
+1.Implement the ``train(self, data, labels)`` method in the class GNB in ``classifier.cpp``. 
 
 Training a Gaussian Naive Bayes classifier consists of computing and storing the mean and standard deviation from the data for each label/feature pair. 
 
+```cpp
+    //For each label, compute the numerators of the means for each class
+    //and the total number of data points given with that label.
+	for (int i=0; i<labels.size(); i++){
+	    if (labels[i] == "left"){
+	        left_means += ArrayXd::Map(data[i].data(), data[i].size()); //conversion of data[i] to ArrayXd
+	        left_size += 1;
+	    } 
+	    else if (labels[i] == "keep") {
+	        keep_means += ArrayXd::Map(data[i].data(), data[i].size());
+	        keep_size += 1;
+	    } else if (labels[i] == "right") {
+	        right_means += ArrayXd::Map(data[i].data(), data[i].size());
+	        right_size += 1;
+	    }
+	}
+	
+	//Compute the means. Each result is a ArrayXd of means (4 means, one for each class)..
+	left_means = left_means/left_size;
+    keep_means = keep_means/keep_size;
+	right_means = right_means/right_size;
+	
+	//Begin computation of standard deviations for each class/label combination.
+	ArrayXd data_point;
+	
+	//Compute numerators of the standard deviations.
+	for (int i=0; i<labels.size(); i++){
+	    data_point = ArrayXd::Map(data[i].data(), data[i].size());
+	    if (labels[i] == "left"){
+	        left_sds += (data_point - left_means)*(data_point - left_means);
+	    } else if (labels[i] == "keep") {
+	        keep_sds += (data_point - keep_means)*(data_point - keep_means);
+	    } else if (labels[i] == "right") {
+	        right_sds += (data_point - right_means)*(data_point - right_means);
+	    }
+	}
+	
+	//compute standard deviations
+	left_sds = (left_sds/left_size).sqrt();
+    keep_sds = (keep_sds/keep_size).sqrt();
+    right_sds = (right_sds/right_size).sqrt();
+```
 
-2. Implement the ``predict(self, observation)`` method in ``classifier.cpp``.
+2.Implement the ``predict(self, observation)`` method in ``classifier.cpp``.
 
 Given a new data point, prediction requires two steps: 
 
@@ -64,6 +110,35 @@ For a feature xxx and label CCC with mean μ\muμ and standard deviation σ\sigm
 
 This can be done using the formula:
 
-2.3. When you want to test your classifier, run ``Test Run`` and check out the results.
+```python
+string GNB::predict(vector<double> sample)
+{
+	//Calculate product of conditional probabilities for each label.
+	double left_p = 1.0;
+	double keep_p = 1.0;
+	double right_p = 1.0; 
+	for (int i=0; i<4; i++){
+	    left_p *= (1.0/sqrt(2.0 * M_PI * pow(left_sds[i], 2))) * exp(-0.5*pow(sample[i] - left_means[i], 2)/pow(left_sds[i], 2));
+	    keep_p *= (1.0/sqrt(2.0 * M_PI * pow(keep_sds[i], 2))) * exp(-0.5*pow(sample[i] - keep_means[i], 2)/pow(keep_sds[i], 2));
+	    right_p *= (1.0/sqrt(2.0 * M_PI * pow(right_sds[i], 2))) * exp(-0.5*pow(sample[i] - right_means[i], 2)/pow(right_sds[i], 2));
+	}
+	
+	//Multiply each by the prior
+	left_p *= left_prior;
+	keep_p *= keep_prior;
+	right_p *= right_prior;
+    
+    	double probs[3] = {left_p, keep_p, right_p};
+    	double max = left_p;
+    	double max_index = 0;
+    	for (int i=1; i<3; i++){
+        	if (probs[i] > max) {
+            		max = probs[i];
+            		max_index = i;
+        }
+    }	
+	return this -> possible_labels[max_index];
+}
+```
 
 
